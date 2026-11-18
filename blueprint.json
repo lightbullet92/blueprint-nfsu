@@ -1,0 +1,144 @@
+{
+  "manifestVersion": 1,
+  "id": "com.kubek.nfsu.auto",
+  "name": "Need for Speed: Underground (2003)",
+  "shortName": "NFSU",
+  "description": "Dedicated Server Emulator for Need for Speed: Underground (HarpyWar nfsuserver)",
+  "game": "nfsu",
+  "icon": "icon.png",
+  "author": { "name": "Rivero92" },
+  "version": "1.0.0",
+  "tags": ["nfs", "nfsu", "underground", "racing", "2003"],
+  "engines": { "kubek": ">=4.0.0" },
+  "platforms": ["linux"],
+  "runtime": { "kind": "native" },
+  "variables": [
+    {
+      "key": "GAME_VERSION",
+      "label": "Version",
+      "type": "enum",
+      "options": { "from": "versions" },
+      "rules": "required",
+      "userEditable": true
+    },
+    {
+      "key": "SERVER_NAME",
+      "label": "Server Name",
+      "type": "string",
+      "default": "NFSU Server",
+      "rules": "required",
+      "userEditable": true
+    },
+    {
+      "key": "PUBLIC_IP",
+      "label": "External IP (if behind NAT, otherwise leave empty)",
+      "type": "string",
+      "default": "",
+      "userEditable": true
+    },
+    {
+      "key": "WELCOME_MESSAGE",
+      "label": "Welcome Message",
+      "type": "string",
+      "default": "Welcome to NFS Underground Server!",
+      "userEditable": true
+    },
+    {
+      "key": "REGISTER_GLOBAL",
+      "label": "Register in Global Server List (1=Yes, 0=No)",
+      "type": "enum",
+      "options": [
+        { "value": "0", "label": "LAN / Private (0)" },
+        { "value": "1", "label": "Public Global List (1)" }
+      ],
+      "default": "0",
+      "userEditable": true
+    },
+    {
+      "key": "VERBOSE_LOGS",
+      "label": "Verbose Console Logs (1=Yes, 0=No)",
+      "type": "enum",
+      "options": [
+        { "value": "1", "label": "Enabled (1)" },
+        { "value": "0", "label": "Disabled (0)" }
+      ],
+      "default": "1",
+      "userEditable": true
+    },
+    {
+      "key": "LAUNCH_ARGS",
+      "label": "Launch arguments",
+      "type": "string",
+      "default": "",
+      "userEditable": true
+    }
+  ],
+  "versions": {
+    "kind": "resolver",
+    "module": "versions.ts"
+  },
+  "install": {
+    "runIn": "host",
+    "steps": [
+      {
+        "type": "download",
+        "url": "{{DOWNLOAD_URL}}",
+        "dest": "nfsuserver.tar",
+        "unpack": true
+      }
+    ]
+  },
+  "startup": {
+    "command": "if [ ! -f nfsuserver ]; then BIN=$(find . -maxdepth 3 -type f -name 'nfsuserver*' ! -name '*.tar*' | head -n 1); [ -n \"$BIN\" ] && [ \"$BIN\" != \"./nfsuserver\" ] && cp \"$BIN\" ./nfsuserver; fi && chmod +x ./nfsuserver && grep -q '^disablelogscreen' nfsu.conf || echo 'disablelogscreen = 0' >> nfsu.conf && sed -i -e 's|\\r||g' -e 's|^servername *=.*|servername = {{SERVER_NAME}}|' -e 's|^serverexternalip *=.*|serverexternalip = {{PUBLIC_IP}}|' -e 's|^welcomemessage *=.*|welcomemessage = {{WELCOME_MESSAGE}}|' -e 's|^registerglobal *=.*|registerglobal = {{REGISTER_GLOBAL}}|' -e 's|^verbose *=.*|verbose = {{VERBOSE_LOGS}}|' -e 's|^disablelogscreen *=.*|disablelogscreen = 0|' nfsu.conf && exec ./nfsuserver {{LAUNCH_ARGS}}",
+    "stop": { "type": "signal", "value": "SIGINT" }
+  },
+  "detection": {
+    "running": [
+      "Starting StatThread",
+      "Listening for Redirector connections"
+    ],
+    "stopping": [
+      "Shutting down",
+      "Server stopped",
+      "Stopping"
+    ]
+  },
+  "ports": [
+    {
+      "key": "redirector",
+      "label": "Redirector (Main TCP)",
+      "default": 10900,
+      "protocol": "tcp",
+      "env": "SERVER_PORT",
+      "primary": true
+    },
+    {
+      "key": "listener",
+      "label": "Listener (TCP)",
+      "default": 10901,
+      "protocol": "tcp"
+    },
+    {
+      "key": "reporter",
+      "label": "Reporter (TCP)",
+      "default": 10980,
+      "protocol": "tcp"
+    },
+    {
+      "key": "client_reporter_tcp",
+      "label": "Client Reporter (TCP)",
+      "default": 10800,
+      "protocol": "tcp"
+    },
+    {
+      "key": "client_reporter_udp",
+      "label": "Client Reporter (UDP)",
+      "default": 10800,
+      "protocol": "udp"
+    }
+  ],
+  "configFiles": [
+    { "path": "nfsu.conf", "parser": "properties", "label": "Server Config (nfsu.conf)" }
+  ],
+  "features": ["console", "backups", "files"]
+}

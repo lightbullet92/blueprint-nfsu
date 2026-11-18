@@ -1,0 +1,11 @@
+{
+  "name": "kubek-blueprint-nfsu",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kubek blueprint for Need for Speed: Underground. No build step, package folder as a .kbp (zip).",
+  "devDependencies": {
+    "@kubekpanel/blueprint-sdk": "^0.1.2",
+    "typescript": "^5"
+  }
+}
