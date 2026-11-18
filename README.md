@@ -1,6 +1,6 @@
 # Need for Speed: Underground (2003) Blueprint для Kubek
 
-Готовый blueprint для быстрого развертывания и управления выделенным сервером **Need for Speed: Underground (2003)** на базе открытого серверного эмулятора [HarpyWar/nfsuserver](https://github.com) в панели управления **Kubek** (`>= 4.0.0`).
+Готовый blueprint для быстрого развертывания и управления выделенным сервером **Need for Speed: Underground (2003)** на базе открытого серверного эмулятора [HarpyWar/nfsuserver](https://github.com/HarpyWar/nfsuserver) в панели управления **Kubek** (`>= 4.0.0`).
 
 ## Возможности
 
@@ -18,7 +18,7 @@
 * **TCP `10980`** — Reporter
 * **TCP `10800`** и **UDP `10800`** — Client Reporter
 
-> **Примечание:** если сервер расположен за NAT, обязательно укажите его белый внешний IP-адрес в параметре **External IP** в настройках сервера в Kubek. Для подключения игрокам потребуется **NFS: Underground v1.4** и клиентский лаунчер `NFSU Client` из раздела [Releases HarpyWar/nfsuserver](https://github.com/releases).
+> **Примечание:** если сервер расположен за NAT, обязательно укажите его белый внешний IP-адрес в параметре **External IP** в настройках сервера в Kubek. Для подключения игрокам потребуется **NFS: Underground v1.4** и клиентский лаунчер `NFSU Client` из раздела [Releases HarpyWar/nfsuserver](https://github.com/HarpyWar/nfsuserver/releases).
 
 ## Установка в панель Kubek
 
