@@ -6,10 +6,10 @@
   "description": "Dedicated Server Emulator for Need for Speed: Underground (HarpyWar nfsuserver)",
   "game": "nfsu",
   "icon": "icon.png",
-  "author": { "name": "Rivero92" },
-  "version": "1.0.0",
+  "author": { "name": "lightbullet92" },
+  "version": "1.0.1",
   "tags": ["nfs", "nfsu", "underground", "racing", "2003"],
-  "engines": { "kubek": ">=4.0.0" },
+  "engines": { "kubek": ">=4.1.3" },
   "platforms": ["linux"],
   "runtime": { "kind": "native" },
   "variables": [
@@ -47,10 +47,13 @@
       "key": "REGISTER_GLOBAL",
       "label": "Register in Global Server List (1=Yes, 0=No)",
       "type": "enum",
-      "options": [
-        { "value": "0", "label": "LAN / Private (0)" },
-        { "value": "1", "label": "Public Global List (1)" }
-      ],
+      "options": {
+        "from": "static",
+        "values": [
+          { "value": "0", "label": "LAN / Private (0)" },
+          { "value": "1", "label": "Public Global List (1)" }
+        ]
+      },
       "default": "0",
       "userEditable": true
     },
@@ -58,10 +61,13 @@
       "key": "VERBOSE_LOGS",
       "label": "Verbose Console Logs (1=Yes, 0=No)",
       "type": "enum",
-      "options": [
-        { "value": "1", "label": "Enabled (1)" },
-        { "value": "0", "label": "Disabled (0)" }
-      ],
+      "options": {
+        "from": "static",
+        "values": [
+          { "value": "1", "label": "Enabled (1)" },
+          { "value": "0", "label": "Disabled (0)" }
+        ]
+      },
       "default": "1",
       "userEditable": true
     },
@@ -90,7 +96,7 @@
   },
   "startup": {
     "command": "if [ ! -f nfsuserver ]; then BIN=$(find . -maxdepth 3 -type f -name 'nfsuserver*' ! -name '*.tar*' | head -n 1); [ -n \"$BIN\" ] && [ \"$BIN\" != \"./nfsuserver\" ] && cp \"$BIN\" ./nfsuserver; fi && chmod +x ./nfsuserver && grep -q '^disablelogscreen' nfsu.conf || echo 'disablelogscreen = 0' >> nfsu.conf && sed -i -e 's|\\r||g' -e 's|^servername *=.*|servername = {{SERVER_NAME}}|' -e 's|^serverexternalip *=.*|serverexternalip = {{PUBLIC_IP}}|' -e 's|^welcomemessage *=.*|welcomemessage = {{WELCOME_MESSAGE}}|' -e 's|^registerglobal *=.*|registerglobal = {{REGISTER_GLOBAL}}|' -e 's|^verbose *=.*|verbose = {{VERBOSE_LOGS}}|' -e 's|^disablelogscreen *=.*|disablelogscreen = 0|' nfsu.conf && exec ./nfsuserver {{LAUNCH_ARGS}}",
-    "stop": { "type": "signal", "value": "SIGINT" }
+    "stop": { "type": "signal:SIGINT" }
   },
   "detection": {
     "running": [
@@ -102,6 +108,10 @@
       "Server stopped",
       "Stopping"
     ]
+  },
+  "query": {
+    "protocol": "none",
+    "port": { "fromVariable": "SERVER_PORT" }
   },
   "ports": [
     {
