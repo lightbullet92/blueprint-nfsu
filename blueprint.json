@@ -45,28 +45,22 @@
     },
     {
       "key": "REGISTER_GLOBAL",
-      "label": "Register in Global Server List (1=Yes, 0=No)",
+      "label": "Register in Global Server List (0 = LAN / Private, 1 = Public Global List)",
       "type": "enum",
       "options": {
         "from": "static",
-        "values": [
-          { "value": "0", "label": "LAN / Private (0)" },
-          { "value": "1", "label": "Public Global List (1)" }
-        ]
+        "values": ["0", "1"]
       },
       "default": "0",
       "userEditable": true
     },
     {
       "key": "VERBOSE_LOGS",
-      "label": "Verbose Console Logs (1=Yes, 0=No)",
+      "label": "Verbose Console Logs (1 = Enabled, 0 = Disabled)",
       "type": "enum",
       "options": {
         "from": "static",
-        "values": [
-          { "value": "1", "label": "Enabled (1)" },
-          { "value": "0", "label": "Disabled (0)" }
-        ]
+        "values": ["1", "0"]
       },
       "default": "1",
       "userEditable": true
